@@ -7,6 +7,8 @@ import {
   LIBRARY_SIDEBAR_WIDTH,
   TOOL_TYPE,
 } from "../constants";
+import { ToolButton } from "./ToolButton";
+
 import { showSelectedShapeActions } from "../element";
 import { NonDeletedExcalidrawElement } from "../element/types";
 import { Language, t } from "../i18n";
@@ -285,6 +287,28 @@ const LayerUI = ({
                             checked={appState.activeTool.locked}
                             onChange={onLockToggle}
                             title={t("toolBar.lock")}
+                          />
+
+                          <ToolButton
+                            key={"diamond"}
+                            type="radio"
+                            checked={appState.activeTool.type === "diamond"}
+                            name="editor-current-shape"
+                            aria-label={capitalizeString(`toolBar.diamond`)}
+                            onPointerDown={({ pointerType }) => {
+                              if (
+                                !appState.penDetected &&
+                                pointerType === "pen"
+                              ) {
+                                app.togglePenMode(true);
+                              }
+                            }}
+                            onChange={({ pointerType }) => {
+                              if (appState.activeTool.type !== "diamond") {
+                                trackEvent("toolbar", "diamond", "ui");
+                              }
+                              app.setActiveTool({ type: "diamond" });
+                            }}
                           />
 
                           <div className="App-toolbar__divider" />
