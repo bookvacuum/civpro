@@ -9,6 +9,9 @@ import type {
   ExcalidrawDiamondElement,
   ExcalidrawTextContainer,
   ExcalidrawTextElementWithContainer,
+  ThirdPartyElement,
+  PlaintiffElement,
+  DefendentElement,
 } from "../../element/types";
 import {
   getTransformHandles,
@@ -353,11 +356,11 @@ type Element<T extends DrawingToolName> = T extends "line" | "freedraw"
   : T extends "text"
   ? ExcalidrawTextElement
   : T extends "rectangle"
-  ? ExcalidrawRectangleElement
+  ? ExcalidrawRectangleElement | ThirdPartyElement
   : T extends "ellipse"
-  ? ExcalidrawEllipseElement
+  ? ExcalidrawEllipseElement | PlaintiffElement
   : T extends "diamond"
-  ? ExcalidrawDiamondElement
+  ? ExcalidrawDiamondElement | DefendentElement
   : ExcalidrawElement;
 
 export class UI {
