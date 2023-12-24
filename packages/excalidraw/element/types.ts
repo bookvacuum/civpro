@@ -85,6 +85,28 @@ export type ExcalidrawEllipseElement = _ExcalidrawElementBase & {
   type: "ellipse";
 };
 
+export type PlaintiffElement = _ExcalidrawElementBase & {
+  type: "ellipse";
+  name: string;
+  domicilary: string;
+  original: boolean;
+  number: Number;
+};
+
+export type DefendentElement = _ExcalidrawElementBase & {
+  type: "diamond";
+  name: string;
+  domicilary: string;
+  number: Number;
+};
+
+export type ThirdPartyElement = _ExcalidrawElementBase & {
+  type: "rectangle";
+  name: string;
+  domicilary: string;
+  defendentNumber: Number;
+};
+
 export type ExcalidrawEmbeddableElement = _ExcalidrawElementBase &
   Readonly<{
     type: "embeddable";
@@ -151,6 +173,9 @@ export type ExcalidrawFrameLikeElement =
  * These are elements that don't have any additional properties.
  */
 export type ExcalidrawGenericElement =
+  | DefendentElement
+  | PlaintiffElement
+  | ThirdPartyElement
   | ExcalidrawSelectionElement
   | ExcalidrawRectangleElement
   | ExcalidrawDiamondElement
@@ -197,6 +222,9 @@ export type ExcalidrawTextElement = _ExcalidrawElementBase &
   }>;
 
 export type ExcalidrawBindableElement =
+  | DefendentElement
+  | PlaintiffElement
+  | ThirdPartyElement
   | ExcalidrawRectangleElement
   | ExcalidrawDiamondElement
   | ExcalidrawEllipseElement
@@ -208,6 +236,9 @@ export type ExcalidrawBindableElement =
   | ExcalidrawMagicFrameElement;
 
 export type ExcalidrawTextContainer =
+  | DefendentElement
+  | PlaintiffElement
+  | ThirdPartyElement
   | ExcalidrawRectangleElement
   | ExcalidrawDiamondElement
   | ExcalidrawEllipseElement
