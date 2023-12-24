@@ -173,20 +173,24 @@ export type ExcalidrawFrameLikeElement =
  * These are elements that don't have any additional properties.
  */
 export type ExcalidrawGenericElement =
-  | DefendentElement
-  | PlaintiffElement
-  | ThirdPartyElement
   | ExcalidrawSelectionElement
   | ExcalidrawRectangleElement
   | ExcalidrawDiamondElement
   | ExcalidrawEllipseElement;
 
+export type LegalElement =
+  | DefendentElement
+  | PlaintiffElement
+  | ThirdPartyElement;
 /**
  * ExcalidrawElement should be JSON serializable and (eventually) contain
  * no computed data. The list of all ExcalidrawElements should be shareable
  * between peers and contain no state local to the peer.
  */
 export type ExcalidrawElement =
+  | DefendentElement
+  | PlaintiffElement
+  | ThirdPartyElement
   | ExcalidrawGenericElement
   | ExcalidrawTextElement
   | ExcalidrawLinearElement
