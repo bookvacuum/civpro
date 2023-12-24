@@ -392,7 +392,7 @@ const distanceToEllipse = (
 };
 
 const ellipseParamsForTest = (
-  element: ExcalidrawEllipseElement,
+  element: PlaintiffElement| ExcalidrawEllipseElement,
   point: Point,
 ): [GA.Point, GA.Line] => {
   const [, pointRel, hwidth, hheight] = pointRelativeToElement(element, point);
