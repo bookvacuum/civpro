@@ -145,6 +145,7 @@ import {
   newEmbeddableElement,
   newMagicFrameElement,
   newIframeElement,
+  newLegalElement,
 } from "../element/newElement";
 import {
   hasBoundTextElement,
@@ -5438,7 +5439,11 @@ class App extends React.Component<AppProps, AppState> {
         pointerDownState.lastCoords.y,
       );
     } else if (this.state.activeTool.type === "plaintiff") {
-      this.createGenericElementOnPointerDown("ellipse", pointerDownState);
+      this.createLegalElementOnPointerDown(
+        "ellipse",
+        "plaintiff",
+        pointerDownState,
+      );
     } else if (
       this.state.activeTool.type !== "eraser" &&
       this.state.activeTool.type !== "hand"
@@ -6602,7 +6607,7 @@ class App extends React.Component<AppProps, AppState> {
       x: gridX,
       y: gridY,
       strokeColor: this.state.currentItemStrokeColor,
-      backgroundColor: this.state.currentItemBackgroundColor,
+      backgroundColor: "red",
       fillStyle: this.state.currentItemFillStyle,
       strokeWidth: this.state.currentItemStrokeWidth,
       strokeStyle: this.state.currentItemStrokeStyle,
@@ -6614,10 +6619,27 @@ class App extends React.Component<AppProps, AppState> {
     } as const;
 
     let element;
-    element = newElement({
+    element = newLegalElement({
       type: elementType,
+      partyType,
+      name: "hah",
+      domicilary: "nah",
+      number: 3,
       ...baseElementAttributes,
     });
+    if (element.type === "selection") {
+      this.setState({
+        selectionElement: element,
+        draggingElement: element,
+      });
+    } else {
+      this.scene.addNewElement(element);
+      this.setState({
+        multiElement: null,
+        draggingElement: element,
+        editingElement: element,
+      });
+    }
   };
 
   private createFrameElementOnPointerDown = (
