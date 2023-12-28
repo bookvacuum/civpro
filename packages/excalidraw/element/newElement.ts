@@ -1,5 +1,6 @@
 import {
   ExcalidrawElement,
+  LegalElement,
   ExcalidrawImageElement,
   ExcalidrawTextElement,
   ExcalidrawLinearElement,
@@ -125,6 +126,95 @@ const _newElementBase = <T extends ExcalidrawElement>(
   };
   return element;
 };
+const _newLegalElementBase = <T extends ExcalidrawElement>(
+  type: T["type"],
+  partyType: string,
+  name: string,
+  domicilary: string,
+  number: Number,
+  {
+    x,
+    y,
+    strokeColor = DEFAULT_ELEMENT_PROPS.strokeColor,
+    backgroundColor = DEFAULT_ELEMENT_PROPS.backgroundColor,
+    fillStyle = DEFAULT_ELEMENT_PROPS.fillStyle,
+    strokeWidth = DEFAULT_ELEMENT_PROPS.strokeWidth,
+    strokeStyle = DEFAULT_ELEMENT_PROPS.strokeStyle,
+    roughness = DEFAULT_ELEMENT_PROPS.roughness,
+    opacity = DEFAULT_ELEMENT_PROPS.opacity,
+    width = 0,
+    height = 0,
+    angle = 0,
+    groupIds = [],
+    frameId = null,
+    roundness = null,
+    boundElements = null,
+    link = null,
+    locked = DEFAULT_ELEMENT_PROPS.locked,
+    ...rest
+  }: ElementConstructorOpts & Omit<Partial<ExcalidrawGenericElement>, "type">,
+) => {
+  // assign type to guard against excess properties
+  const element: Merge<
+    ExcalidrawGenericElement,
+    {
+      type: T["type"];
+      partyType: string;
+      name: string;
+      domicilary: string;
+      number: Number;
+    }
+  > = {
+    id: rest.id || randomId(),
+    type,
+    partyType,
+    name,
+    domicilary,
+    number,
+    x,
+    y,
+    width,
+    height,
+    angle,
+    strokeColor,
+    backgroundColor,
+    fillStyle,
+    strokeWidth,
+    strokeStyle,
+    roughness,
+    opacity,
+    groupIds,
+    frameId,
+    roundness,
+    seed: rest.seed ?? randomInteger(),
+    version: rest.version || 1,
+    versionNonce: rest.versionNonce ?? 0,
+    isDeleted: false as false,
+    boundElements,
+    updated: getUpdatedTimestamp(),
+    link,
+    locked,
+  };
+  return element;
+};
+
+export const newLegalElement = (
+  opts: {
+    type: LegalElement["type"];
+    partyType: LegalElement["partyType"];
+    name: string;
+    domicilary: string;
+    number: Number;
+  } & ElementConstructorOpts,
+): NonDeleted<ExcalidrawGenericElement> =>
+  _newLegalElementBase<ExcalidrawGenericElement>(
+    opts.type,
+    opts.partyType,
+    opts.name,
+    opts.domicilary,
+    opts.number,
+    opts,
+  );
 
 export const newElement = (
   opts: {

@@ -182,6 +182,7 @@ import {
   ExcalidrawIframeLikeElement,
   IframeData,
   ExcalidrawIframeElement,
+  LegalElement,
 } from "../element/types";
 import { getCenter, getDistance } from "../gesture";
 import {
@@ -3932,6 +3933,7 @@ class App extends React.Component<AppProps, AppState> {
               insertOnCanvasDirectly?: boolean;
             }
         )
+      //this part after creating new tool
       | { type: "custom"; customType: string }
     ) & { locked?: boolean },
   ) => {
@@ -5435,6 +5437,8 @@ class App extends React.Component<AppProps, AppState> {
         pointerDownState.lastCoords.x,
         pointerDownState.lastCoords.y,
       );
+    } else if (this.state.activeTool.type === "plaintiff") {
+      this.createGenericElementOnPointerDown("ellipse", pointerDownState);
     } else if (
       this.state.activeTool.type !== "eraser" &&
       this.state.activeTool.type !== "hand"
@@ -6573,6 +6577,47 @@ class App extends React.Component<AppProps, AppState> {
         editingElement: element,
       });
     }
+  };
+
+  //working on it
+  private createLegalElementOnPointerDown = (
+    elementType: LegalElement["type"],
+    partyType: LegalElement["partyType"],
+    pointerDownState: PointerDownState,
+  ): void => {
+    const [gridX, gridY] = getGridPoint(
+      pointerDownState.origin.x,
+      pointerDownState.origin.y,
+      this.lastPointerDownEvent?.[KEYS.CTRL_OR_CMD]
+        ? null
+        : this.state.gridSize,
+    );
+
+    const topLayerFrame = this.getTopLayerFrameAtSceneCoords({
+      x: gridX,
+      y: gridY,
+    });
+
+    const baseElementAttributes = {
+      x: gridX,
+      y: gridY,
+      strokeColor: this.state.currentItemStrokeColor,
+      backgroundColor: this.state.currentItemBackgroundColor,
+      fillStyle: this.state.currentItemFillStyle,
+      strokeWidth: this.state.currentItemStrokeWidth,
+      strokeStyle: this.state.currentItemStrokeStyle,
+      roughness: this.state.currentItemRoughness,
+      opacity: this.state.currentItemOpacity,
+      roundness: this.getCurrentItemRoundness(elementType),
+      locked: false,
+      frameId: topLayerFrame ? topLayerFrame.id : null,
+    } as const;
+
+    let element;
+    element = newElement({
+      type: elementType,
+      ...baseElementAttributes,
+    });
   };
 
   private createFrameElementOnPointerDown = (

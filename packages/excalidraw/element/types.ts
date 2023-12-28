@@ -87,13 +87,14 @@ export type ExcalidrawEllipseElement = _ExcalidrawElementBase & {
 
 export type PlaintiffElement = _ExcalidrawElementBase & {
   type: "ellipse";
+  partyType: "plaintiff";
   name: string;
   domicilary: string;
-  original: boolean;
   number: Number;
 };
 
 export type DefendentElement = _ExcalidrawElementBase & {
+  partyType: "defendent";
   type: "diamond";
   name: string;
   domicilary: string;
@@ -101,10 +102,11 @@ export type DefendentElement = _ExcalidrawElementBase & {
 };
 
 export type ThirdPartyElement = _ExcalidrawElementBase & {
+  partyType: "thirdparty";
   type: "rectangle";
   name: string;
   domicilary: string;
-  defendentNumber: Number;
+  number: Number;
 };
 
 export type ExcalidrawEmbeddableElement = _ExcalidrawElementBase &

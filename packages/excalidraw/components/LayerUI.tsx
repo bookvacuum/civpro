@@ -307,7 +307,7 @@ const LayerUI = ({
                               if (appState.activeTool.type !== "diamond") {
                                 trackEvent("toolbar", "diamond", "ui");
                               }
-                              app.setActiveTool({ type: "diamond" });
+                              app.setActiveTool({ type: "plaintiff" });
                             }}
                           />
 
