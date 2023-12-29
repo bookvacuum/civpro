@@ -6618,13 +6618,13 @@ class App extends React.Component<AppProps, AppState> {
       frameId: topLayerFrame ? topLayerFrame.id : null,
     } as const;
 
-    let element;
-    element = newLegalElement({
+    const element = newLegalElement({
       type: elementType,
       partyType,
       name: "hah",
       domicilary: "nah",
       number: 3,
+      customData: { what: "tommy" },
       ...baseElementAttributes,
     });
     if (element.type === "selection") {
@@ -6634,6 +6634,31 @@ class App extends React.Component<AppProps, AppState> {
       });
     } else {
       this.scene.addNewElement(element);
+      document.addEventListener("pointerup", (event: PointerEvent) => {
+        const fontFamily = this.state.currentItemFontFamily;
+
+        const textElem = newTextElement({
+          x: element.x + element.width / 2,
+          y: element.y + element.height / 2,
+          strokeColor: this.state.currentItemStrokeColor,
+          backgroundColor: this.state.currentItemBackgroundColor,
+          fillStyle: this.state.currentItemFillStyle,
+          strokeWidth: this.state.currentItemStrokeWidth,
+          strokeStyle: this.state.currentItemStrokeStyle,
+          roughness: this.state.currentItemRoughness,
+          opacity: this.state.currentItemOpacity,
+          text: "p",
+          fontSize: this.state.currentItemFontSize,
+          fontFamily,
+          textAlign: this.state.currentItemTextAlign,
+          verticalAlign: DEFAULT_VERTICAL_ALIGN,
+          containerId: element.id,
+          lineHeight: getDefaultLineHeight(fontFamily),
+          angle: element.angle,
+          frameId: topLayerFrame ? topLayerFrame.id : null,
+        });
+        this.scene.addNewElement(textElem);
+      });
       this.setState({
         multiElement: null,
         draggingElement: element,
