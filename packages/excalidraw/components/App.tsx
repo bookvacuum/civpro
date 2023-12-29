@@ -6616,6 +6616,7 @@ class App extends React.Component<AppProps, AppState> {
       roundness: this.getCurrentItemRoundness(elementType),
       locked: false,
       frameId: topLayerFrame ? topLayerFrame.id : null,
+      customData: { partyType },
     } as const;
 
     const element = newLegalElement({
@@ -6624,7 +6625,6 @@ class App extends React.Component<AppProps, AppState> {
       name: "hah",
       domicilary: "nah",
       number: 3,
-      customData: { what: "tommy" },
       ...baseElementAttributes,
     });
     if (element.type === "selection") {
@@ -6647,7 +6647,7 @@ class App extends React.Component<AppProps, AppState> {
           strokeStyle: this.state.currentItemStrokeStyle,
           roughness: this.state.currentItemRoughness,
           opacity: this.state.currentItemOpacity,
-          text: "p",
+          text: element.customData?.partyType,
           fontSize: this.state.currentItemFontSize,
           fontFamily,
           textAlign: this.state.currentItemTextAlign,
