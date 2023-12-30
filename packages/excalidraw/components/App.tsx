@@ -6637,7 +6637,7 @@ class App extends React.Component<AppProps, AppState> {
       let pointerUpHandled = false;
 
       document.addEventListener("pointerup", (event: PointerEvent) => {
-        if (!pointerUpHandled) {
+        if (!pointerUpHandled && element.width > 1) {
           const fontFamily = this.state.currentItemFontFamily;
           const textElem = newTextElement({
             x: element.x + element.width / 2,
@@ -6670,7 +6670,6 @@ class App extends React.Component<AppProps, AppState> {
           const containerIndex = this.scene.getElementIndex(element.id);
           this.scene.insertElementAtIndex(textElem, containerIndex + 1);
 
-          //this.scene.addNewElement(textElem);
           pointerUpHandled = true;
           this.setState({
             activeTool: updateActiveTool(this.state, { type: "selection" }),
