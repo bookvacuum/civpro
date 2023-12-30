@@ -29,6 +29,9 @@ const getHints = ({ appState, isMobile, device, app }: HintViewerProps) => {
   if (isEraserActive(appState)) {
     return t("hints.eraserRevert");
   }
+  if (activeTool.type === "plaintiff") {
+    return "Start lawsuit by drawing the plaintiff onto the canvas";
+  }
   if (activeTool.type === "arrow" || activeTool.type === "line") {
     if (!multiMode) {
       return t("hints.linearElement");
