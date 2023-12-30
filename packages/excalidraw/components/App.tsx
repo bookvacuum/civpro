@@ -6634,31 +6634,50 @@ class App extends React.Component<AppProps, AppState> {
       });
     } else {
       this.scene.addNewElement(element);
-      document.addEventListener("pointerup", (event: PointerEvent) => {
-        const fontFamily = this.state.currentItemFontFamily;
+      let pointerUpHandled = false;
 
-        const textElem = newTextElement({
-          x: element.x + element.width / 2,
-          y: element.y + element.height / 2,
-          strokeColor: this.state.currentItemStrokeColor,
-          backgroundColor: this.state.currentItemBackgroundColor,
-          fillStyle: this.state.currentItemFillStyle,
-          strokeWidth: this.state.currentItemStrokeWidth,
-          strokeStyle: this.state.currentItemStrokeStyle,
-          roughness: this.state.currentItemRoughness,
-          opacity: this.state.currentItemOpacity,
-          text: element.customData?.partyType,
-          fontSize: this.state.currentItemFontSize,
-          fontFamily,
-          textAlign: this.state.currentItemTextAlign,
-          verticalAlign: DEFAULT_VERTICAL_ALIGN,
-          containerId: element.id,
-          lineHeight: getDefaultLineHeight(fontFamily),
-          angle: element.angle,
-          frameId: topLayerFrame ? topLayerFrame.id : null,
-        });
-        this.scene.addNewElement(textElem);
+      document.addEventListener("pointerup", (event: PointerEvent) => {
+        if (!pointerUpHandled) {
+          const fontFamily = this.state.currentItemFontFamily;
+          const textElem = newTextElement({
+            x: element.x + element.width / 2,
+            y: element.y + element.height / 2,
+            strokeColor: this.state.currentItemStrokeColor,
+            backgroundColor: this.state.currentItemBackgroundColor,
+            fillStyle: this.state.currentItemFillStyle,
+            strokeWidth: this.state.currentItemStrokeWidth,
+            strokeStyle: this.state.currentItemStrokeStyle,
+            roughness: this.state.currentItemRoughness,
+            opacity: this.state.currentItemOpacity,
+            text: element.customData?.partyType,
+            fontSize: this.state.currentItemFontSize,
+            fontFamily,
+            textAlign: "center",
+            verticalAlign: VERTICAL_ALIGN.MIDDLE,
+            containerId: element.id,
+            lineHeight: getDefaultLineHeight(fontFamily),
+            angle: element.angle,
+            frameId: topLayerFrame ? topLayerFrame.id : null,
+            groupIds: element.groupIds,
+          });
+          mutateElement(element, {
+            boundElements: (element.boundElements || []).concat({
+              type: "text",
+              id: textElem.id,
+            }),
+          });
+
+          const containerIndex = this.scene.getElementIndex(element.id);
+          this.scene.insertElementAtIndex(textElem, containerIndex + 1);
+
+          //this.scene.addNewElement(textElem);
+          pointerUpHandled = true;
+          this.setState({
+            activeTool: updateActiveTool(this.state, { type: "selection" }),
+          });
+        }
       });
+
       this.setState({
         multiElement: null,
         draggingElement: element,
