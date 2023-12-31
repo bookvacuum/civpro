@@ -6607,7 +6607,7 @@ class App extends React.Component<AppProps, AppState> {
       x: gridX,
       y: gridY,
       strokeColor: this.state.currentItemStrokeColor,
-      backgroundColor: "red",
+      backgroundColor: "skyblue",
       fillStyle: this.state.currentItemFillStyle,
       strokeWidth: this.state.currentItemStrokeWidth,
       strokeStyle: this.state.currentItemStrokeStyle,
@@ -6616,7 +6616,12 @@ class App extends React.Component<AppProps, AppState> {
       roundness: this.getCurrentItemRoundness(elementType),
       locked: false,
       frameId: topLayerFrame ? topLayerFrame.id : null,
-      customData: { partyType },
+      customData: {
+        partyType,
+        number: 1,
+        name: "Enter party name",
+        domicilary: "Choose domicilary",
+      },
     } as const;
 
     const element = newLegalElement({
@@ -6629,6 +6634,7 @@ class App extends React.Component<AppProps, AppState> {
     });
     if (element.type === "selection") {
       this.setState({
+        selectedGroupIds: { [element.id]: true },
         selectionElement: element,
         draggingElement: element,
       });
@@ -6649,7 +6655,7 @@ class App extends React.Component<AppProps, AppState> {
             strokeStyle: this.state.currentItemStrokeStyle,
             roughness: this.state.currentItemRoughness,
             opacity: this.state.currentItemOpacity,
-            text: element.customData?.partyType,
+            text: element.customData?.partyType[0],
             fontSize: this.state.currentItemFontSize,
             fontFamily,
             textAlign: "center",
@@ -6660,19 +6666,53 @@ class App extends React.Component<AppProps, AppState> {
             frameId: topLayerFrame ? topLayerFrame.id : null,
             groupIds: element.groupIds,
           });
+
+          const nameText = newTextElement({
+            x: element.x + element.width / 2,
+            y: element.y - getDefaultLineHeight(fontFamily) * 12,
+            strokeColor: this.state.currentItemStrokeColor,
+            backgroundColor: this.state.currentItemBackgroundColor,
+            fillStyle: this.state.currentItemFillStyle,
+            strokeWidth: this.state.currentItemStrokeWidth,
+            strokeStyle: this.state.currentItemStrokeStyle,
+            roughness: this.state.currentItemRoughness,
+            opacity: this.state.currentItemOpacity,
+            text: element.customData?.name,
+            fontSize: this.state.currentItemFontSize,
+            fontFamily,
+            textAlign: "center",
+            verticalAlign: VERTICAL_ALIGN.MIDDLE,
+            //containerId: textElem.id,
+            lineHeight: getDefaultLineHeight(fontFamily),
+            angle: element.angle,
+            frameId: topLayerFrame ? topLayerFrame.id : null,
+            groupIds: element.groupIds,
+          });
           mutateElement(element, {
-            boundElements: (element.boundElements || []).concat({
-              type: "text",
-              id: textElem.id,
-            }),
+            boundElements: (element.boundElements || []).concat([
+              {
+                type: "text",
+                id: textElem.id,
+              },
+              // {
+              //   type: "text",
+              //   id: nameText.id,
+              // },
+            ]),
           });
 
           const containerIndex = this.scene.getElementIndex(element.id);
           this.scene.insertElementAtIndex(textElem, containerIndex + 1);
 
+          this.scene.addNewElement(nameText);
+
           pointerUpHandled = true;
           this.setState({
             activeTool: updateActiveTool(this.state, { type: "selection" }),
+          });
+          this.setState({
+            selectedGroupIds: { [element.id]: true },
+            selectedElementsAreBeingDragged: true,
           });
         }
       });
