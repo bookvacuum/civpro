@@ -120,6 +120,7 @@ import {
   transformElements,
   updateTextElement,
   redrawTextBoundingBox,
+  getNonDeletedElements,
 } from "../element";
 import {
   bindOrUnbindLinearElement,
@@ -187,12 +188,15 @@ import {
 } from "../element/types";
 import { getCenter, getDistance } from "../gesture";
 import {
+  addToGroup,
   editGroupForSelectedElement,
+  elementsAreInSameGroup,
   getElementsInGroup,
   getSelectedGroupIdForElement,
   getSelectedGroupIds,
   isElementInGroup,
   isSelectedViaGroup,
+  selectGroup,
   selectGroupsForSelectedElements,
 } from "../groups";
 import History from "../history";
@@ -271,6 +275,7 @@ import {
   isTestEnv,
   easeOut,
   updateStable,
+  arrayToMap,
 } from "../utils";
 import {
   createSrcDoc,
@@ -401,6 +406,7 @@ import { ElementCanvasButton } from "./MagicButton";
 import { MagicIcon, copyIcon, fullscreenIcon } from "./icons";
 import { EditorLocalStorage } from "../data/EditorLocalStorage";
 import FollowMode from "./FollowMode/FollowMode";
+import { randomId } from "../random";
 
 const AppContext = React.createContext<AppClassProperties>(null!);
 const AppPropsContext = React.createContext<AppProps>(null!);
@@ -5443,6 +5449,7 @@ class App extends React.Component<AppProps, AppState> {
         "ellipse",
         "plaintiff",
         pointerDownState,
+        this.state,
       );
     } else if (
       this.state.activeTool.type !== "eraser" &&
@@ -6589,6 +6596,7 @@ class App extends React.Component<AppProps, AppState> {
     elementType: LegalElement["type"],
     partyType: LegalElement["partyType"],
     pointerDownState: PointerDownState,
+    appState: Readonly<AppState>,
   ): void => {
     const [gridX, gridY] = getGridPoint(
       pointerDownState.origin.x,
@@ -6634,7 +6642,7 @@ class App extends React.Component<AppProps, AppState> {
     });
     if (element.type === "selection") {
       this.setState({
-        selectedGroupIds: { [element.id]: true },
+        //  selectedGroupIds: { [element.id]: true },
         selectionElement: element,
         draggingElement: element,
       });
@@ -6707,16 +6715,68 @@ class App extends React.Component<AppProps, AppState> {
           this.scene.addNewElement(nameText);
 
           pointerUpHandled = true;
+
+          const newGroupId = randomId();
+          const selectedElements = [element, nameText as ExcalidrawElement];
+          const selectElementIds = arrayToMap(selectedElements);
+
+          let nextElements = [...selectedElements];
+
+          nextElements = nextElements.map((elem) => {
+            if (!selectElementIds.get(elem.id)) {
+              return elem;
+            }
+            return newElementWith(elem, {
+              groupIds: addToGroup(
+                elem.groupIds,
+                newGroupId,
+                appState.editingGroupId,
+              ),
+            });
+          });
+
+          const elementsInGroup = getElementsInGroup(nextElements, newGroupId);
+          const lastElementInGroup =
+            elementsInGroup[elementsInGroup.length - 1];
+          const lastGroupElementIndex =
+            nextElements.lastIndexOf(lastElementInGroup);
+          const elementsAfterGroup = nextElements.slice(
+            lastGroupElementIndex + 1,
+          );
+          const elementsBeforeGroup = nextElements
+            .slice(0, lastGroupElementIndex)
+            .filter(
+              (updatedElement) => !isElementInGroup(updatedElement, newGroupId),
+            );
+          nextElements = [
+            ...elementsBeforeGroup,
+            ...elementsInGroup,
+            ...elementsAfterGroup,
+          ];
+
+          this.setState({
+            ...appState,
+            ...selectGroup(
+              newGroupId,
+              { ...appState, selectedGroupIds: {} },
+              getNonDeletedElements(nextElements),
+            ),
+          });
+
+          // PanelComponent: console.log(
+          //   getElementsInGroup(nextElements, newGroupId),
+          // );
+
           this.setState({
             activeTool: updateActiveTool(this.state, { type: "selection" }),
           });
-          this.setState({
-            selectedGroupIds: { [element.id]: true },
-            selectedElementsAreBeingDragged: true,
-          });
+
+          // this.setState({
+          //   selectedGroupIds: { [element.id]: true },
+          //   selectedElementsAreBeingDragged: true,
+          // });
         }
       });
-
       this.setState({
         multiElement: null,
         draggingElement: element,
