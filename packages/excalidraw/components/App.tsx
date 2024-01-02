@@ -6611,6 +6611,8 @@ class App extends React.Component<AppProps, AppState> {
       y: gridY,
     });
 
+    const previousElements = this.scene.getNonDeletedElements();
+
     const baseElementAttributes = {
       x: gridX,
       y: gridY,
@@ -6717,7 +6719,11 @@ class App extends React.Component<AppProps, AppState> {
           pointerUpHandled = true;
 
           const newGroupId = randomId();
-          const selectedElements = [element, nameText as ExcalidrawElement];
+          const selectedElements = [
+            element,
+            nameText as ExcalidrawElement,
+            textElem as ExcalidrawBindableElement,
+          ];
           const selectElementIds = arrayToMap(selectedElements);
 
           let nextElements = [...selectedElements];
@@ -6754,13 +6760,29 @@ class App extends React.Component<AppProps, AppState> {
             ...elementsAfterGroup,
           ];
 
-          this.setState({
-            ...appState,
-            ...selectGroup(
-              newGroupId,
-              { ...appState, selectedGroupIds: {} },
-              getNonDeletedElements(nextElements),
-            ),
+          // this.setState({
+          //   ...appState,
+          //   ...selectGroup(
+          //     newGroupId,
+          //     { ...appState, selectedGroupIds: {} },
+          //     getNonDeletedElements(nextElements),
+          //   ),
+          // });
+
+          // nextElements = nextElements.concat(
+          //   this.scene.getNonDeletedElements(),
+          // );
+          this.updateScene({
+            appState: {
+              ...appState,
+              ...selectGroup(
+                newGroupId,
+                { ...appState, selectedGroupIds: {} },
+                getNonDeletedElements(nextElements),
+              ),
+            },
+            elements: nextElements.concat(previousElements),
+            commitToHistory: true,
           });
 
           // PanelComponent: console.log(
