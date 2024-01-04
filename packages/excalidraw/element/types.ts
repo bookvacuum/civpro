@@ -85,6 +85,30 @@ export type ExcalidrawEllipseElement = _ExcalidrawElementBase & {
   type: "ellipse";
 };
 
+export type PlaintiffElement = _ExcalidrawElementBase & {
+  type: "ellipse";
+  partyType: "plaintiff";
+  name: string;
+  domicilary: string;
+  number: Number;
+};
+
+export type DefendentElement = _ExcalidrawElementBase & {
+  partyType: "defendent";
+  type: "diamond";
+  name: string;
+  domicilary: string;
+  number: Number;
+};
+
+export type ThirdPartyElement = _ExcalidrawElementBase & {
+  partyType: "thirdparty";
+  type: "rectangle";
+  name: string;
+  domicilary: string;
+  number: Number;
+};
+
 export type ExcalidrawEmbeddableElement = _ExcalidrawElementBase &
   Readonly<{
     type: "embeddable";
@@ -156,12 +180,19 @@ export type ExcalidrawGenericElement =
   | ExcalidrawDiamondElement
   | ExcalidrawEllipseElement;
 
+export type LegalElement =
+  | DefendentElement
+  | PlaintiffElement
+  | ThirdPartyElement;
 /**
  * ExcalidrawElement should be JSON serializable and (eventually) contain
  * no computed data. The list of all ExcalidrawElements should be shareable
  * between peers and contain no state local to the peer.
  */
 export type ExcalidrawElement =
+  | DefendentElement
+  | PlaintiffElement
+  | ThirdPartyElement
   | ExcalidrawGenericElement
   | ExcalidrawTextElement
   | ExcalidrawLinearElement
@@ -197,6 +228,9 @@ export type ExcalidrawTextElement = _ExcalidrawElementBase &
   }>;
 
 export type ExcalidrawBindableElement =
+  | DefendentElement
+  | PlaintiffElement
+  | ThirdPartyElement
   | ExcalidrawRectangleElement
   | ExcalidrawDiamondElement
   | ExcalidrawEllipseElement
@@ -208,6 +242,9 @@ export type ExcalidrawBindableElement =
   | ExcalidrawMagicFrameElement;
 
 export type ExcalidrawTextContainer =
+  | DefendentElement
+  | PlaintiffElement
+  | ThirdPartyElement
   | ExcalidrawRectangleElement
   | ExcalidrawDiamondElement
   | ExcalidrawEllipseElement

@@ -28,6 +28,9 @@ import {
   StrokeRoundness,
   ExcalidrawFrameLikeElement,
   ExcalidrawIframeLikeElement,
+  ThirdPartyElement,
+  DefendentElement,
+  PlaintiffElement,
 } from "./types";
 
 import {
@@ -347,6 +350,7 @@ const isOutsideCheck = (distance: number, threshold: number): boolean => {
 
 const distanceToRectangle = (
   element:
+    | ThirdPartyElement
     | ExcalidrawRectangleElement
     | ExcalidrawTextElement
     | ExcalidrawFreeDrawElement
@@ -371,7 +375,7 @@ const distanceToRectangleBox = (box: RectangleBox, point: Point): number => {
 };
 
 const distanceToDiamond = (
-  element: ExcalidrawDiamondElement,
+  element: DefendentElement | ExcalidrawDiamondElement,
   point: Point,
 ): number => {
   const [, pointRel, hwidth, hheight] = pointRelativeToElement(element, point);
@@ -380,7 +384,7 @@ const distanceToDiamond = (
 };
 
 const distanceToEllipse = (
-  element: ExcalidrawEllipseElement,
+  element: PlaintiffElement | ExcalidrawEllipseElement,
   point: Point,
 ): number => {
   const [pointRel, tangent] = ellipseParamsForTest(element, point);
@@ -388,7 +392,7 @@ const distanceToEllipse = (
 };
 
 const ellipseParamsForTest = (
-  element: ExcalidrawEllipseElement,
+  element: PlaintiffElement | ExcalidrawEllipseElement,
   point: Point,
 ): [GA.Point, GA.Line] => {
   const [, pointRel, hwidth, hheight] = pointRelativeToElement(element, point);
