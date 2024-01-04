@@ -1146,6 +1146,7 @@ const renderTransformHandles = (
   });
 };
 
+//add for legalElement...
 const renderSelectionBorder = (
   context: CanvasRenderingContext2D,
   appState: InteractiveCanvasAppState,
