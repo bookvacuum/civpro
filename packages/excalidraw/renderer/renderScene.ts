@@ -157,10 +157,11 @@ const fillCircle = (
   cx: number,
   cy: number,
   radius: number,
-  stroke = true,
+  stroke = false,
   strokeColor? : string,
   fillColor? : string,
 ) => {
+  context.setLineDash([]);
   context.beginPath();
   context.arc(cx, cy, radius, 0, Math.PI * 2);
   if(fillColor) {
@@ -174,6 +175,7 @@ const fillCircle = (
   if (stroke) {
     context.stroke();
   }
+
 };
 
 const strokeGrid = (
@@ -1224,7 +1226,7 @@ const renderSelectionBorder = (
       context,
       elementX1 - padding,
       elementY1  + elementHeight/2,
-      10,
+      5,
       true,
       "blue",
       "blue",
@@ -1233,16 +1235,16 @@ const renderSelectionBorder = (
       context,
       elementX1  + elementWidth/2,
       elementY1 - padding,
-      10,
+      5,
       true,
-       "blue",
+      "blue",
       "blue",
     );
     fillCircle(
       context,
       elementX1 + elementWidth/2,
       elementY1 + elementHeight + padding,
-      10,
+      5,
       true,
        "blue",
       "blue",
@@ -1251,9 +1253,9 @@ const renderSelectionBorder = (
       context,
       elementX1 + elementWidth + padding,
       elementY1  + elementHeight/2,
-      10,
+      5,
       true,
-       "blue",
+      "blue",
       "blue",
     );
 
