@@ -1231,15 +1231,15 @@ const renderSelectionBorder = (
       "blue",
       "blue",
     );
- fillCircle(
-      context,
-      elementX1  + elementWidth/2,
-      elementY1 - padding,
-      5,
-      true,
-      "blue",
-      "blue",
-    );
+//  fillCircle(
+//       context,
+//       elementX1  + elementWidth/2,
+//       elementY1 - padding,
+//       5,
+//       true,
+//       "blue",
+//       "blue",
+//     );
     fillCircle(
       context,
       elementX1 + elementWidth/2,
