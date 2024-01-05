@@ -158,10 +158,19 @@ const fillCircle = (
   cy: number,
   radius: number,
   stroke = true,
+  strokeColor? : string,
+  fillColor? : string,
 ) => {
   context.beginPath();
   context.arc(cx, cy, radius, 0, Math.PI * 2);
+  if(fillColor) {
+    context.fillStyle = fillColor;
+  }
   context.fill();
+  if(strokeColor){
+  context.strokeStyle = strokeColor;
+  }
+
   if (stroke) {
     context.stroke();
   }
@@ -583,6 +592,7 @@ const _renderInteractiveScene = ({
             cx: number;
             cy: number;
             activeEmbeddable: boolean;
+           // legalGroup?: boolean;
           }[],
           element,
         ) => {
@@ -629,8 +639,10 @@ const _renderInteractiveScene = ({
         [],
       );
 
+      //legalElement
       const addSelectionForGroupId = (groupId: GroupId) => {
         const groupElements = getElementsInGroup(elements, groupId);
+
         const [elementX1, elementY1, elementX2, elementY2] =
           getCommonBounds(groupElements);
         selections.push({
@@ -655,7 +667,7 @@ const _renderInteractiveScene = ({
       if (appState.editingGroupId) {
         addSelectionForGroupId(appState.editingGroupId);
       }
-
+      //for individual elements
       selections.forEach((selection) =>
         renderSelectionBorder(context, appState, selection),
       );
@@ -1207,6 +1219,44 @@ const renderSelectionBorder = (
       cy,
       angle,
     );
+    const padding = 20;
+    fillCircle(
+      context,
+      elementX1 - padding,
+      elementY1  + elementHeight/2,
+      10,
+      true,
+      "blue",
+      "blue",
+    );
+ fillCircle(
+      context,
+      elementX1  + elementWidth/2,
+      elementY1 - padding,
+      10,
+      true,
+       "blue",
+      "blue",
+    );
+    fillCircle(
+      context,
+      elementX1 + elementWidth/2,
+      elementY1 + elementHeight + padding,
+      10,
+      true,
+       "blue",
+      "blue",
+    );
+      fillCircle(
+      context,
+      elementX1 + elementWidth + padding,
+      elementY1  + elementHeight/2,
+      10,
+      true,
+       "blue",
+      "blue",
+    );
+
   }
   context.restore();
 };
